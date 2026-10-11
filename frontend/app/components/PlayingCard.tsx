@@ -29,47 +29,62 @@ const CARD_SUIT_GLYPH_MAP: Record<CardSuit, string> = {
   "Diamond": '/icon/diamond.png'
 };
 
+// For tinting the color
+const RED_TINT_FILTER =
+  'brightness(0) saturate(100%) invert(18%) sepia(87%) saturate(6144%) hue-rotate(354deg) brightness(94%) contrast(92%)';
+
+// Native card size (matches w-64 h-96)
+const BASE_WIDTH = 256;
+const BASE_HEIGHT = 384;
+
 /* Actual Programatic Card Generation */ 
 
 export default function PlayingCard(
-  { value, suit, color }: 
-  { value: CardValue, suit: CardSuit, color: CardColor }
+  { value, suit, color, scale = 1 }: 
+  { value: CardValue, suit: CardSuit, color: CardColor, scale?: number }
 ) {
   const cardDescription = value + suit + color;
   const imagePath = CARD_VALUE_ICON_MAP[value] || (CARD_SUIT_GLYPH_MAP[suit]);
-  const colorHex = (color == "RED") ? "text-red-600" : "text-black";
+  const colorHex = (color == "Red") ? "text-red-600" : "text-black";
 
   return (
-    <div className={`relative w-64 h-96 bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden flex flex-col justify-between p-4 select-none ${colorHex}`}>
-      
-      {/* Top Header Row (Value Left, Glyph Right) */}
-      <div className="flex justify-between items-start w-full">
-        {/* Top left = CARD VALUE */}
-        <span className="text-5xl font-black font-serif leading-none tracking-tighter">
-          {value}
-        </span>
-        
-        {/* Top right = CARD GLYPH */}
-        <span className="text-4xl font-serif leading-none">
-          {suit === 'Spade' && '♠'}
-          {suit === 'Heart' && '♥'}
-          {suit === 'Club' && '♣'}
-          {suit === 'Diamond' && '♦'}
-        </span>
-      </div>
+    // Outer wrapper reserves the scaled footprint so layout flows correctly
+    <div style={{ width: BASE_WIDTH * scale, height: BASE_HEIGHT * scale }}>
+      {/* Inner wrapper scales the card from its top-left corner */}
+      <div style={{ width: BASE_WIDTH, height: BASE_HEIGHT, transform: `scale(${scale})`, transformOrigin: 'top left' }}>
 
-      {/* Bottom Half = Img */}
-      <div className="w-full h-3/4 mt-auto relative flex items-center justify-center overflow-hidden rounded-xl bg-gray-50 border border-gray-100">
-        <Image 
-          className="w-full h-full object-contain p-2" 
-          width={500} 
-          height={500}
-          src={imagePath} 
-          alt={cardDescription}
-        />
-      </div>
+        <div className={`relative w-64 h-96 bg-white rounded-2xl border border-gray-200 shadow-xl overflow-hidden flex flex-col justify-between p-4 select-none ${colorHex}`}>
+          
+          {/* Top Header Row (Value Left, Glyph Right) */}
+          <div className="flex justify-between items-start w-full">
+            {/* Top left = CARD VALUE */}
+            <span className="text-5xl font-black font-serif leading-none tracking-tighter">
+              {value}
+            </span>
+            
+            {/* Top right = CARD GLYPH */}
+            <span className="text-4xl font-serif leading-none">
+              {suit === 'Spade' && '♠'}
+              {suit === 'Heart' && '♥'}
+              {suit === 'Club' && '♣'}
+              {suit === 'Diamond' && '♦'}
+            </span>
+          </div>
 
+          {/* Bottom Half = Img */}
+          <div className="w-full h-3/4 mt-auto relative flex items-center justify-center overflow-hidden rounded-xl bg-gray-50 border border-gray-100">
+            <Image 
+              className="w-full h-full object-contain p-2" 
+              style={{ filter: (color == "Red") ? RED_TINT_FILTER : 'none' }}
+              width={500} 
+              height={500}
+              src={imagePath} 
+              alt={cardDescription}
+            />
+          </div>
+
+        </div>
+      </div>
     </div>
   );
 }
-

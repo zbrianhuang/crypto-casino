@@ -3,9 +3,9 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { getLogtoContext, signIn, signOut } from "@logto/next/server-actions";
 import "./globals.css";
 import { logtoConfig } from "./logto";
-import SignIn from "./components/SignIn";
-import SignOut from "./components/SignOut";
-import AppShell from "./components/AppShell";
+import SignIn from "./components/pages/SignIn";
+import SignOut from "./components/pages/SignOut";
+import AppShell from "./components/pages/AppShell";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

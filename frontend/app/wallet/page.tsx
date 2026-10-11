@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import WalletPanel, { type Tx } from "../components/WalletPanel";
+import WalletPanel, { type Tx } from "../components/pages/WalletPanel";
 import { db } from "../../lib/db";
 import { getCurrentUser } from "../../lib/user";
 import { CURRENCY } from "../../lib/wallet-config";
